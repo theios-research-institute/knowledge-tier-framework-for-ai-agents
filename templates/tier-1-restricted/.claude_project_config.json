@@ -1,0 +1,28 @@
+{
+  "project_meta": {
+    "name": "PROJECT_NAME",
+    "security_tier": 1,
+    "tier_name": "Restricted",
+    "created": "CREATION_DATE",
+    "framework": "Knowledge Tier Framework v1.0.0",
+    "framework_url": "https://github.com/theios-research-institute/knowledge-tier-framework-for-ai-agents"
+  },
+  "security_requirements": {
+    "memory": "DISABLED",
+    "agents": "NONE",
+    "cloud_sync": false,
+    "cross_project_references": false,
+    "session_handoff_location": "local_only"
+  },
+  "workflow": {
+    "initialization": "manual_only",
+    "feature_descriptions": "vague_only",
+    "commit_messages": "generic",
+    "documentation": "minimal"
+  },
+  "warnings": {
+    "on_memory_enabled": "CRITICAL: Memory must be DISABLED for this tier",
+    "on_agent_access": "BLOCKED: No external agents permitted",
+    "on_cloud_sync": "BLOCKED: Cloud synchronization not permitted"
+  }
+}

@@ -1,0 +1,9 @@
+# Knowledge Tier Configuration
+# Tier 2: CONFIDENTIAL - Competitive advantage protection
+# Part of Knowledge Tier Framework by Theios Research Institute
+
+TIER=confidential
+MEMORY_REQUIRED=on
+AGENTS_ALLOWED=limited
+CLOUD_SYNC=limited
+DESCRIPTION="Internal R&D, business strategy, proprietary methodologies"

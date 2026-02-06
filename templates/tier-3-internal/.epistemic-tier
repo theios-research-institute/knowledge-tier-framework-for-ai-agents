@@ -1,0 +1,9 @@
+# Knowledge Tier Configuration
+# Tier 3: INTERNAL - Business operations and client work
+# Part of Knowledge Tier Framework by Theios Research Institute
+
+TIER=internal
+MEMORY_REQUIRED=on
+AGENTS_ALLOWED=project
+CLOUD_SYNC=local
+DESCRIPTION="Client projects, internal tools, business processes"

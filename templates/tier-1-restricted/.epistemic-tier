@@ -1,0 +1,9 @@
+# Knowledge Tier Configuration
+# Tier 1: RESTRICTED - Maximum protection required
+# Part of Knowledge Tier Framework by Theios Research Institute
+
+TIER=restricted
+MEMORY_REQUIRED=off
+AGENTS_ALLOWED=none
+CLOUD_SYNC=no
+DESCRIPTION="Trade secrets, proprietary research, pre-patent work"

@@ -1,0 +1,9 @@
+# Knowledge Tier Configuration
+# Tier 4: PUBLIC - Open access permitted
+# Part of Knowledge Tier Framework by Theios Research Institute
+
+TIER=public
+MEMORY_REQUIRED=on
+AGENTS_ALLOWED=all
+CLOUD_SYNC=yes
+DESCRIPTION="Open source, documentation, public content"
