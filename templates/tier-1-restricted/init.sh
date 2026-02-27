@@ -73,6 +73,54 @@ else
     echo -e "  ${GREEN}✓ Project not in detected cloud sync directory${NC}"
 fi
 
+# Check 5: Git remote verification (if ALLOWED_REMOTES is set)
+if [ -f ".epistemic-tier" ]; then
+    ALLOWED_REMOTES=$(grep -E "^ALLOWED_REMOTES=" ".epistemic-tier" 2>/dev/null | cut -d= -f2)
+    if [ -n "$ALLOWED_REMOTES" ] && [ -d ".git" ]; then
+        echo -e "${BOLD}Checking git remotes against ALLOWED_REMOTES...${NC}"
+        REMOTE_ERRORS=0
+        while IFS= read -r REMOTE_LINE; do
+            [ -z "$REMOTE_LINE" ] && continue
+            REMOTE_NAME=$(echo "$REMOTE_LINE" | awk '{print $1}')
+            REMOTE_URL=$(echo "$REMOTE_LINE" | awk '{print $2}')
+            # Normalize URL: strip protocol/user prefix and .git suffix
+            # git@host:path → host/path, https://host/path → host/path
+            # Also handles ssh://, git:// protocols
+            NORMALIZED_URL="$REMOTE_URL"
+            NORMALIZED_URL="${NORMALIZED_URL%.git}"
+            NORMALIZED_URL=$(echo "$NORMALIZED_URL" | sed -E 's|^ssh://[^@]*@||; s|^ssh://||; s|^git://||; s|^https?://||; s|^[^@]*@([^:]+):|\1/|')
+            MATCHED=0
+            IFS=',' read -ra PATTERNS <<< "$ALLOWED_REMOTES"
+            for PATTERN in "${PATTERNS[@]}"; do
+                PATTERN=$(echo "$PATTERN" | xargs)  # trim whitespace
+                [ -z "$PATTERN" ] && continue
+                if [[ "$PATTERN" == *'*' ]]; then
+                    PREFIX="${PATTERN%\*}"
+                    if [[ "$NORMALIZED_URL" == *"$PREFIX"* ]] || [[ "$REMOTE_URL" == *"$PREFIX"* ]]; then
+                        MATCHED=1
+                        break
+                    fi
+                else
+                    if [[ "$NORMALIZED_URL" == *"$PATTERN"* ]] || [[ "$REMOTE_URL" == *"$PATTERN"* ]]; then
+                        MATCHED=1
+                        break
+                    fi
+                fi
+            done
+            if [ "$MATCHED" -eq 0 ]; then
+                echo -e "  ${RED}✗ Remote '$REMOTE_NAME' ($REMOTE_URL) not in ALLOWED_REMOTES${NC}"
+                REMOTE_ERRORS=$((REMOTE_ERRORS + 1))
+            fi
+        done < <(git remote -v 2>/dev/null | grep '(push)')
+        if [ "$REMOTE_ERRORS" -eq 0 ]; then
+            echo -e "  ${GREEN}✓ All git remotes match ALLOWED_REMOTES${NC}"
+        else
+            echo -e "    Allowed: ${YELLOW}$ALLOWED_REMOTES${NC}"
+            ERRORS=$((ERRORS + REMOTE_ERRORS))
+        fi
+    fi
+fi
+
 # Results
 echo ""
 echo -e "${BOLD}═══════════════════════════════════════════════════════════════${NC}"

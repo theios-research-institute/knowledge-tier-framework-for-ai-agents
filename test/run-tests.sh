@@ -140,6 +140,26 @@ assert_equals "public" "$TIER4" "Tier 4 TIER=public"
 MEM_REQ=$(grep -E "^MEMORY_REQUIRED=" "$PROJECT_DIR/templates/tier-1-restricted/.epistemic-tier" | cut -d= -f2)
 assert_equals "off" "$MEM_REQ" "Tier 1 MEMORY_REQUIRED=off"
 
+# Tier 1 should have ALLOWED_REMOTES field
+if grep -qE "^ALLOWED_REMOTES=" "$PROJECT_DIR/templates/tier-1-restricted/.epistemic-tier"; then
+    echo -e "${GREEN}✓${NC} Tier 1 has ALLOWED_REMOTES field"
+    PASSED=$((PASSED + 1))
+else
+    echo -e "${RED}✗${NC} Tier 1 missing ALLOWED_REMOTES field"
+    FAILED=$((FAILED + 1))
+fi
+
+# Tiers 2-4 should have commented ALLOWED_REMOTES
+for tier_file in tier-2-confidential tier-3-internal tier-4-public; do
+    if grep -qE "^#ALLOWED_REMOTES=" "$PROJECT_DIR/templates/$tier_file/.epistemic-tier"; then
+        echo -e "${GREEN}✓${NC} $tier_file has commented ALLOWED_REMOTES"
+        PASSED=$((PASSED + 1))
+    else
+        echo -e "${RED}✗${NC} $tier_file missing commented ALLOWED_REMOTES"
+        FAILED=$((FAILED + 1))
+    fi
+done
+
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════

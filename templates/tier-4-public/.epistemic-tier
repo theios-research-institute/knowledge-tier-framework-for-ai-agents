@@ -6,4 +6,5 @@ TIER=public
 MEMORY_REQUIRED=on
 AGENTS_ALLOWED=all
 CLOUD_SYNC=yes
+#ALLOWED_REMOTES=
 DESCRIPTION="Open source, documentation, public content"

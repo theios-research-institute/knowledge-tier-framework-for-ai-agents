@@ -49,6 +49,7 @@ The Knowledge Tier Framework provides a structured approach to classifying proje
 - No cloud synchronization
 - Manual initialization only (no automated scaffolding)
 - Complete isolation from other projects
+- Declare allowed push destinations with `ALLOWED_REMOTES` (see [Outbound Action Protection](#outbound-action-protection))
 
 **Legal basis:** Trade secret law requires "reasonable measures to maintain secrecy." AI memory retention may constitute inadequate protection.
 
@@ -175,24 +176,28 @@ TIER=restricted
 MEMORY_REQUIRED=off
 AGENTS_ALLOWED=none
 CLOUD_SYNC=no
+ALLOWED_REMOTES=github.com/my-org/my-repo
 
 # For Tier 2 (Confidential)
 TIER=confidential
 MEMORY_REQUIRED=on
 AGENTS_ALLOWED=limited
 CLOUD_SYNC=limited
+#ALLOWED_REMOTES=
 
 # For Tier 3 (Internal)
 TIER=internal
 MEMORY_REQUIRED=on
 AGENTS_ALLOWED=project
 CLOUD_SYNC=local
+#ALLOWED_REMOTES=
 
 # For Tier 4 (Public)
 TIER=public
 MEMORY_REQUIRED=on
 AGENTS_ALLOWED=all
 CLOUD_SYNC=yes
+#ALLOWED_REMOTES=
 ```
 
 ### Check Project Tier
@@ -201,6 +206,56 @@ CLOUD_SYNC=yes
 # In any project directory
 cat .epistemic-tier
 ```
+
+---
+
+## Outbound Action Protection
+
+The `ALLOWED_REMOTES` field in `.epistemic-tier` restricts where code can be pushed, published, or deployed. This prevents accidental pushes to wrong organizations, registries, or servers.
+
+### Configuration
+
+Add `ALLOWED_REMOTES` to your `.epistemic-tier` file with a comma-separated list of allowed destination patterns:
+
+```bash
+# Exact repository (works with any git host)
+ALLOWED_REMOTES=github.com/my-org/my-repo
+ALLOWED_REMOTES=gitlab.com/my-group/my-repo
+ALLOWED_REMOTES=bitbucket.org/my-team/my-repo
+
+# Multiple destinations (comma-separated)
+ALLOWED_REMOTES=github.com/my-org/my-repo,gitlab.com/my-group/my-repo
+
+# Wildcard — any repo under an org/group
+ALLOWED_REMOTES=github.com/my-org/*
+ALLOWED_REMOTES=gitlab.com/my-group/*
+
+# Self-hosted servers
+ALLOWED_REMOTES=git.internal.company.com/*
+ALLOWED_REMOTES=192.168.1.50:*
+
+# Package registries and S3 buckets
+ALLOWED_REMOTES=registry.npmjs.org
+ALLOWED_REMOTES=s3://my-deploy-bucket
+```
+
+### Behavior
+
+| `ALLOWED_REMOTES` Value | Effect |
+|-------------------------|--------|
+| Not present | No outbound checking (backwards compatible) |
+| Empty (`ALLOWED_REMOTES=`) | No outbound checking (backwards compatible) |
+| Populated | Outbound actions checked against list; blocked if no match |
+
+### Pattern Matching
+
+- **Exact substring**: `github.com/my-org/my-repo` matches any URL containing that string
+- **Trailing wildcard**: `github.com/my-org/*` matches any URL containing `github.com/my-org/`
+- **All URL formats handled automatically**: `git@github.com:my-org/my-repo.git` is normalized to `github.com/my-org/my-repo` before matching, so one pattern covers HTTPS, SSH (`git@host:path`, `ssh://`), and `git://` protocol remotes
+
+### What Gets Checked
+
+When paired with [Epistemic Guardrails](https://github.com/theios-research-institute/epistemic-guardrails-for-ai-agents), the following commands are intercepted: `git push`, `git remote add`, `git remote set-url`, `gh repo create`, `npm publish`, `cargo publish`, `pip/twine upload`, `rsync`, `scp`, `aws s3 cp/sync`.
 
 ---
 
@@ -394,4 +449,4 @@ This work was inspired by and builds upon:
 
 ---
 
-*Knowledge Tier Framework for AI Agents v1.0.0 — Theios Research Institute, Inc.*
+*Knowledge Tier Framework for AI Agents v1.1.0 — Theios Research Institute, Inc.*

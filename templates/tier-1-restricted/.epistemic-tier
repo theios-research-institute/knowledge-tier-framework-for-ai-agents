@@ -6,4 +6,5 @@ TIER=restricted
 MEMORY_REQUIRED=off
 AGENTS_ALLOWED=none
 CLOUD_SYNC=no
+ALLOWED_REMOTES=
 DESCRIPTION="Trade secrets, proprietary research, pre-patent work"

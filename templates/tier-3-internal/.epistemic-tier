@@ -6,4 +6,5 @@ TIER=internal
 MEMORY_REQUIRED=on
 AGENTS_ALLOWED=project
 CLOUD_SYNC=local
+#ALLOWED_REMOTES=
 DESCRIPTION="Client projects, internal tools, business processes"

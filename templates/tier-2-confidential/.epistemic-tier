@@ -6,4 +6,5 @@ TIER=confidential
 MEMORY_REQUIRED=on
 AGENTS_ALLOWED=limited
 CLOUD_SYNC=limited
+#ALLOWED_REMOTES=
 DESCRIPTION="Internal R&D, business strategy, proprietary methodologies"
