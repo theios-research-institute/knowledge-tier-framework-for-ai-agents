@@ -19,6 +19,8 @@ This software is provided as-is with no warranty. The authors are not responsibl
 
 The Knowledge Tier Framework provides a structured approach to classifying projects based on their information sensitivity requirements. It integrates with [Epistemic Guardrails](https://github.com/theios-research-institute/epistemic-guardrails-for-ai-agents) to enforce appropriate boundaries for AI agent access.
 
+> **Important:** This framework classifies and structures your projects but does **not enforce** access controls on its own. Install [Epistemic Guardrails for AI Agents](https://github.com/theios-research-institute/epistemic-guardrails-for-ai-agents) for runtime enforcement (memory blocking, file access guards, outbound action protection).
+
 ---
 
 ## The Four Tiers
@@ -349,7 +351,7 @@ source ~/.zshrc  # or ~/.bashrc
 ### init.sh fails verification
 
 1. Check the specific error message
-2. For Tier 1: Ensure memory is OFF (`memory-status`)
+2. For Tier 1: Ensure memory is OFF (`epistemic-memory-status`)
 3. Verify `.epistemic-tier` file exists and has correct values
 
 ### Wrong tier detected

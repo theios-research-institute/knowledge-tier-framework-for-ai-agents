@@ -168,7 +168,7 @@ if [ "$TIER" = "1" ]; then
     echo "  1. Edit .claude_project_config.json with project name"
     echo "  2. Run ./init.sh to verify environment"
     echo "  3. Review SECURITY_PROTOCOL.md"
-    echo "  4. Ensure memory is OFF: memory-status"
+    echo "  4. Ensure memory is OFF: epistemic-memory-status"
 else
     echo "  1. Review .epistemic-tier configuration"
     echo "  2. Customize tier settings if needed"

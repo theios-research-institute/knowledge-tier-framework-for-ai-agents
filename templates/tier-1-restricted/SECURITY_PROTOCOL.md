@@ -12,13 +12,13 @@ This project is classified as **Tier 1: Restricted** under the Knowledge Tier Fr
 
 ### Memory Status
 - [ ] Memory MUST be **DISABLED** before any work session
-- [ ] Verify with: `memory-status`
-- [ ] If enabled, run: `memory-off`
-- [ ] Also disable in Claude web settings: https://claude.ai/settings/capabilities
+- [ ] Verify with: `epistemic-memory-status`
+- [ ] If enabled, run: `epistemic-memory-off`
+- [ ] Also disable in your AI assistant's memory/retention settings
 
 ### Session Management
-- [ ] Start sessions with: `claude-secure`
-- [ ] Never use standard `claude` command for this project
+- [ ] Verify memory is OFF before starting any session
+- [ ] Run `./init.sh` to check environment before working
 - [ ] Create `SESSION_HANDOFF.md` at end of every session
 - [ ] Store handoffs locally only (no cloud sync)
 
@@ -47,13 +47,13 @@ This project is classified as **Tier 1: Restricted** under the Knowledge Tier Fr
 
 ```bash
 # 1. Verify memory is off
-memory-status
+epistemic-memory-status
 
 # 2. If memory is ON, disable it
-memory-off
+epistemic-memory-off
 
-# 3. Start secure session
-claude-secure
+# 3. Verify environment
+./init.sh
 ```
 
 ---
@@ -86,7 +86,7 @@ If an outbound action is blocked by Epistemic Guardrails, the deny message will 
 1. **STOP** all work immediately
 2. Note what information may have been exposed
 3. Disable memory in Claude settings
-4. Run `memory-off` to update local status
+4. Run `epistemic-memory-off` to update local status
 5. Document the incident in project notes
 6. Review what was discussed and assess impact
 
