@@ -160,6 +160,35 @@ done
 # Make init.sh executable
 chmod +x init.sh 2>/dev/null || true
 
+# Auto-create Copilot CLI hooks if in a git repo and adapter is installed
+if git rev-parse --is-inside-work-tree &>/dev/null && [ -f "$HOME/.epistemic/adapters/github-copilot.sh" ]; then
+    REPO_ROOT=$(git rev-parse --show-toplevel)
+    COPILOT_HOOKS="$REPO_ROOT/.github/hooks/copilot-hooks.json"
+    if [ ! -f "$COPILOT_HOOKS" ]; then
+        mkdir -p "$REPO_ROOT/.github/hooks"
+        cat > "$COPILOT_HOOKS" << 'COPILOTJSON'
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "$HOME/.epistemic/adapters/github-copilot.sh pre-tool-use"
+      }
+    ],
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "$HOME/.epistemic/adapters/github-copilot.sh session-start"
+      }
+    ]
+  }
+}
+COPILOTJSON
+        echo -e "${GREEN}✓ Copilot CLI hooks created: .github/hooks/copilot-hooks.json${NC}"
+    fi
+fi
+
 echo ""
 echo -e "${GREEN}✓ Project initialized as Tier $TIER${NC}"
 echo ""
